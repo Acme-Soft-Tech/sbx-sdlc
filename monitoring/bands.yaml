@@ -1,0 +1,41 @@
+# Stage 6. No model in the detection path — a breach is arithmetic, and only the
+# response is agentic.
+#
+# HONEST LIMIT: these thresholds are unprovable in the sandbox. Near-zero traffic
+# means there is no baseline to derive sigma from. What the rig proves is that the
+# TRIGGER PATH works: breach -> Linear issue -> intent.md. Never claim the numbers
+# are right. Derive them from 30 days of real data before promoting.
+
+baseline:
+  window_days: 14
+  min_samples: 30          # below this, log only — never act on noise
+
+signals:
+  - name: qa_pass_rate
+    source: postgres
+    query: >
+      select avg(pass_rate) from test_runs
+      where started_at > now() - interval '24 hours'
+    bands:
+      - { sigma: 2, action: log }
+      - { sigma: 3, action: diagnose }      # read-only agent, writes a finding
+      - { sigma: 4, action: propose_pr }    # still needs G5 to land
+
+  - name: onboarding_funnel_conversion
+    source: posthog
+    funnel: onboarding
+    note: sandbox PostHog project only — never the production project key
+    bands:
+      - { sigma: 2, action: log }
+      - { sigma: 3, action: diagnose }
+
+  - name: ci_failure_rate
+    source: github
+    bands:
+      - { sigma: 3, action: diagnose }
+
+on_breach:
+  write_intent: true       # the loop closes here: work arrives that nobody filed
+  linear_team: SBX
+  labels: [bug, qa-regression]
+  gate: G6                 # a service owner triages: fix, schedule, or dismiss

@@ -1,0 +1,42 @@
+# What submodules cannot express: the fork/upstream split, verify commands,
+# Linear prefixes, and which real repo each sandbox repo stands in for.
+
+linear:
+  workspace: SBX
+  url: https://linear.app/sbx-acme
+  key_prefix: SBX
+
+repos:
+  - name: sbx-web
+    mirrors: relintex/EvaFi
+    upstream: Acme-Soft-Tech/sbx-web
+    fork: sbx-alroy/sbx-web
+    branch: main
+    path: repos/sbx-web
+    language: typescript
+    verify:
+      - npm run lint
+      - npx tsc --noEmit
+      - npm run test:coverage
+    merges: first          # see B-1: web merges before qa, always
+
+  - name: sbx-qa
+    mirrors: vspl-alroy/evafi-qa
+    upstream: Acme-Soft-Tech/sbx-qa
+    fork: sbx-alroy/sbx-qa
+    branch: main
+    path: repos/sbx-qa
+    language: python
+    verify:
+      - ruff check .
+      - pytest -m "smoke" --collect-only
+    merges: second         # its new acceptance test lands xfail in the web PR
+
+  - name: sbx-api
+    mirrors: vspl-alroy/evafi-backend
+    upstream: Acme-Soft-Tech/sbx-api
+    fork: null             # no fork: nothing agentic edits it during the run
+    branch: main
+    path: repos/sbx-api
+    language: typescript
+    verify: []
