@@ -23,6 +23,24 @@ import urllib.error
 import urllib.request
 
 API = "https://api.linear.app/graphql"
+ENV_FILE = os.environ.get("SBX_ENV", os.path.expanduser("~/.config/sbx/linear.env"))
+
+
+def _load_local_env():
+    """A GitHub Actions secret is write-only and cannot be read back, so anything
+    running on a workstation needs its own copy. Kept outside every repo."""
+    if os.environ.get("LINEAR_API_KEY") or not os.path.exists(ENV_FILE):
+        return
+    with open(ENV_FILE) as fh:
+        for line in fh:
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            k, v = line.split("=", 1)
+            os.environ.setdefault(k.strip(), v.strip().strip("\"'"))
+
+
+_load_local_env()
 
 
 def gql(query, variables=None):
