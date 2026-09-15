@@ -27,9 +27,24 @@ whole audit chain work; `commitlint` enforces it.
 ## Two repos, one change: web merges first
 
 A change spanning `sbx-web` and `sbx-qa` is two PRs in two repos and nothing sequences
-them. The rule: **web merges first.** The new acceptance test lands in the *same web PR*
-marked `xfail`, and a follow-up commit flips it once the deploy is live. Merging the QA
-side first turns the scheduled suite red against behaviour that has not shipped.
+them. The rule: **web merges and deploys first, then the QA PR opens.**
+
+    1. PR in sbx-web   -> merge -> Vercel deploys
+    2. confirm the deploy actually serves the new DOM hook
+    3. PR in sbx-qa    -> merge
+
+**Do not put the acceptance test in the web PR marked `xfail`.** That instruction was
+wrong and stood here for a day. It is impossible — `sbx-web` has no pytest, so a Python
+test cannot run there — and `xfail` has no safe setting in this repo:
+
+- non-strict (the default, `pytest.ini` sets no `xfail_strict`): after the deploy the
+  test XPASSes, which reports green. Nothing forces anyone to flip it, so it can sit
+  there asserting nothing indefinitely — the same silent-green failure mode as an unset
+  `SBX_BASE_URL`.
+- strict: the XPASS becomes a failure on the 06:00 scheduled run, whose triage job
+  auto-files a Linear bug. It creates exactly the spurious red the rule claimed to avoid.
+
+Ordering the PRs removes the mechanism instead of tuning it.
 
 ## Never
 
