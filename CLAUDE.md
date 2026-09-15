@@ -34,8 +34,9 @@ broken, because people keep trusting it.
 Branch names come from Linear, never invented — and never cached. SBX-5's changed from
 `alroydsouza/...` to `feature/...` the moment the GitHub integration was connected.
 
-The SBX team has no **In Review** state. Stage 5 leaves the ticket In Progress and puts
-review status in a comment rather than writing a state that does not exist.
+State mapping: Todo after G1, In Progress at Stage 3, **In Review** once both PRs are
+open, Done only when G4 is green against the deployed change. Merged is not Done — a
+ticket closed over a red acceptance suite is how a regression escapes.
 
 ## The work ledger
 

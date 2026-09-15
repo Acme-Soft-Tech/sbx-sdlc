@@ -14,9 +14,8 @@ Use `sbx-git-flow`.
 ## Update Linear
 
 - Comment both PR URLs and which merges first.
-- The team has no **In Review** state today, so the ticket stays **In Progress** and the
-  comment carries the review status. Adding that state would make the queue visible at a
-  glance — worth doing, but do not silently write a state that does not exist: that call
-  fails and the ticket stops reflecting reality.
+- Move `$1` to **In Review** once both PRs are open. The review queue is where work
+  actually waits in this loop, so it should be visible on the board rather than buried
+  in a comment.
 - On merge, comment the merge SHAs. Move to **Done** only once G4 is green against the
   deployed change — merged is not the same as working.
