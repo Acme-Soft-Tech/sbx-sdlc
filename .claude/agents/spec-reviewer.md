@@ -15,8 +15,14 @@ Check, in order:
    a bare `fetch(` in `app/api`, a funnel step with no `FUNNEL_STEP_MAP` entry.
 3. **The Acceptance section.** Present? Names real markers and test classes? Does a
    funnel-visible change actually have `regression` coverage named?
-4. **Sequencing.** Two-repo change — does it say web merges first, QA test xfail?
-5. **What would make this wrong?** State the assumption that, if false, sinks it.
+4. **Sequencing.** Two-repo change — does it order the PRs (web merges and deploys,
+   then the QA PR) rather than trying to ride the QA test in the web PR? A Python test
+   cannot run in `sbx-web`. Flag any use of `xfail` for cross-repo sequencing: it is
+   either silently green forever or a spurious 06:00 failure.
+5. **DOM contract.** Two-repo change — does the spec pin the exact `data-testid` and
+   attributes `sbx-qa` will select on? Without it both sides guess and the acceptance
+   tests are unwritable.
+6. **What would make this wrong?** State the assumption that, if false, sinks it.
 
 Report findings ranked by severity, each with the specific line. End with one line:
 ACCEPT, or ACCEPT WITH CHANGES, or REWORK.

@@ -10,8 +10,9 @@ until a human accepts.
     ## sbx-web
     - src/ui/onboarding/ProgressBar.tsx        new
     - src/lib/analytics/events.ts              add EVENT + FUNNEL_STEP_MAP entry
-    ## sbx-qa
-    - tests/test_Regression_Class.py           add test, xfail until web deploys
+    ## sbx-qa   (PR 2 — opens only after the web deploy is live)
+    - wizard_helpers.py                        add helper, never inline in a test
+    - tests/test_Regression_Class.py           add test
     ## Risks
     - FUNNEL_STEP_MAP indices are load-bearing for six weeks of PostHog history
 

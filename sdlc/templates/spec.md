@@ -14,14 +14,19 @@ Reads: `intent.md` (merged <date>)
 ## Acceptance   *(mandatory)*
 <Markers and test classes in sbx-qa this needs, named before code is written.>
 
-    tests/<file>::<Class>::<test>
-      marker: smoke | regression · new | existing · xfail until web deploys
+    <repo> · tests/<file>::<Class>::<test>            [PR 1 | PR 2]
+      marker: inherited from the class, or named if new
+      asserts: <what, concretely>
 
 ## Flagged concerns
 <Every policy conflict you could not satisfy. Empty only if there genuinely are none.>
 
+## DOM contract   *(mandatory for any two-repo change)*
+<the exact data-testid / attributes sbx-qa will select on. The DOM is the only
+interface between the repos; leaving it unstated makes the acceptance tests unwritable.>
+
 ## Sequencing
-web merges first · QA test lands xfail in the web PR · follow-up flips it
+PR 1 sbx-web -> merge -> deploy -> confirm the hook is live -> PR 2 sbx-qa. No xfail.
 
 ---
 spec-reviewer verdict:
