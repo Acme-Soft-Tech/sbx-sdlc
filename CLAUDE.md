@@ -16,6 +16,27 @@ Nothing is handed over in a chat window. If you find yourself re-explaining the 
 at the build stage despite a committed `spec.md`, say so loudly — that is the single
 outcome that falsifies this whole design.
 
+## Linear is the record
+
+Every stage writes to the ticket: a state change, a comment, or both. This is not
+bookkeeping — it is the only place a non-engineer can see where work actually is.
+
+The GitHub integration attaches PRs by itself, but it reacts only to git events, and
+none of this loop's gates are git events. Verified on 2026-09-15: pushing a correctly
+named branch to the fork AND to the connected repo left SBX-5 in Backlog both times.
+Branch names matter for PR matching, not for status.
+
+So each command writes deliberately, via the Linear MCP in session or
+`scripts/linear_sync.py` from a shell or CI. **A failed Linear write stops the stage.**
+A ticket that has quietly stopped reflecting reality is worse than one that is obviously
+broken, because people keep trusting it.
+
+Branch names come from Linear, never invented — and never cached. SBX-5's changed from
+`alroydsouza/...` to `feature/...` the moment the GitHub integration was connected.
+
+The SBX team has no **In Review** state. Stage 5 leaves the ticket In Progress and puts
+review status in a comment rather than writing a state that does not exist.
+
 ## The work ledger
 
 One directory per Linear key: `sdlc/work/<KEY>/` holding `intent.md`, `spec.md`,
