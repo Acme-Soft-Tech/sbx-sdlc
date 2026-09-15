@@ -1,0 +1,12 @@
+[submodule "repos/sbx-web"]
+	path = repos/sbx-web
+	url = git@github-sbx:Acme-Soft-Tech/sbx-web.git
+	branch = main
+[submodule "repos/sbx-qa"]
+	path = repos/sbx-qa
+	url = git@github-sbx:Acme-Soft-Tech/sbx-qa.git
+	branch = main
+[submodule "repos/sbx-api"]
+	path = repos/sbx-api
+	url = git@github-sbx:Acme-Soft-Tech/sbx-api.git
+	branch = main
