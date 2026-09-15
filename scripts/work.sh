@@ -16,6 +16,9 @@ for name in sbx-web sbx-qa; do
     continue
   fi
   git -C "$clone" fetch upstream --quiet
+  # Branches track upstream/main for rebasing, but pushes must go to the FORK.
+  # Without this a plain `git push` targets upstream, whose push URL is no_push.
+  git -C "$clone" config remote.pushDefault origin
   wt="$ROOT/.worktrees/$KEY/$name"
   mkdir -p "$(dirname "$wt")"
   git -C "$clone" worktree add -B "$branch" "$wt" upstream/main
