@@ -17,7 +17,19 @@ linear_branch_name() {
   name=$(curl -sS -X POST https://api.linear.app/graphql \
            -H "Content-Type: application/json" \
            -H "Authorization: $LINEAR_API_KEY" \
-           -d "$q" | python3 -c "import json,sys;print(json.load(sys.stdin)['data']['issue']['branchName'])")
+           -d "$q" | python3 -c '
+import json, sys
+try:
+    body = json.load(sys.stdin)
+except Exception:
+    sys.exit("Linear returned a non-JSON response")
+if body.get("errors"):
+    sys.exit("Linear API error: " + body["errors"][0].get("message", "unknown"))
+issue = (body.get("data") or {}).get("issue")
+if not issue:
+    sys.exit("No such issue — check the key and that the token is for this workspace")
+print(issue["branchName"])
+')
   [ -n "$name" ] || { echo "Linear returned no branch name for $key" >&2; exit 1; }
   echo "$name"
 }
